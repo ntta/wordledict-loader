@@ -1,6 +1,12 @@
-# wordledict_loader
+# Wordledict Loader
 
-A new Flutter project.
+A Flutter desktop app that allows the user to import a TXT file of English words.
+The app manages the imported words and finds the meaning of each word.
+
+## Screenshots
+
+<img alt="Brief design" src="./screenshots/wordledict-loader.drawio.png" />
+<img alt="Actual screenshot" src="./screenshots/wordledict-loader.png" />
 
 ## Getting Started
 
