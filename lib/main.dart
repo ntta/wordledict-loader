@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:wordledict_loader/loader/presentation/loader_page.dart';
+import 'package:wordledict_loader/locator.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await setup();
   runApp(const MyApp());
 }
 

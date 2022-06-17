@@ -35,13 +35,7 @@ class LoaderPage extends StatelessWidget {
               child: Row(
                 children: [
                   Expanded(
-                    child: Scrollbar(
-                      thumbVisibility: true,
-                      trackVisibility: true,
-                      child: SingleChildScrollView(
-                        child: WordsTable(),
-                      ),
-                    ),
+                    child: WordsTable(),
                   ),
                   const Expanded(
                     child: Center(
