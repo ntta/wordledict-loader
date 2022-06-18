@@ -1,6 +1,6 @@
 import 'package:get_it/get_it.dart';
-import 'package:wordledict_loader/core/infrastructure/sembast_database.dart';
-import 'package:wordledict_loader/core/infrastructure/shared_preferences_database.dart';
+import 'package:wordledict_loader/core/infrastructure/database/sembast_database.dart';
+import 'package:wordledict_loader/core/infrastructure/database/shared_preferences_database.dart';
 
 final locator = GetIt.instance;
 

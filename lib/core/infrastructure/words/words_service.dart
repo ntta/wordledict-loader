@@ -1,10 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:sembast/sembast.dart';
-import 'package:wordledict_loader/core/infrastructure/dio_extensions.dart';
-import 'package:wordledict_loader/core/infrastructure/remote_response.dart';
-import 'package:wordledict_loader/core/infrastructure/rest_api_exception.dart';
-import 'package:wordledict_loader/core/infrastructure/sembast_database.dart';
-import 'package:wordledict_loader/core/infrastructure/word_dto.dart';
+import 'package:wordledict_loader/core/infrastructure/database/sembast_database.dart';
+import 'package:wordledict_loader/core/infrastructure/network/dio_extensions.dart';
+import 'package:wordledict_loader/core/infrastructure/network/remote_response.dart';
+import 'package:wordledict_loader/core/infrastructure/network/rest_api_exception.dart';
+import 'package:wordledict_loader/core/infrastructure/words/word_dto.dart';
 
 class WordsService {
   final SembastDatabase _sembastDatabase;
@@ -31,13 +31,13 @@ class WordsService {
     return records.map((e) => WordDto.fromJson(e.value)).toList();
   }
 
-  Future<RemoteResponse<WordDto>> getMeaningsOfRawWord(
+  Future<RemoteResponse<WordDto>> getWord(
     String rawWord,
   ) async {
     // TODO: get key value from shared preferences
     final requestUri = Uri.parse('https://www.dictionaryapi.com').replace(
       path: 'api/v3/references/learners/json/$rawWord',
-      queryParameters: {'key': 'put-your-key-here'},
+      queryParameters: {'key': '90704a37-93ec-477d-a55c-8f759edae059'},
     );
     try {
       final response = await _dio.getUri(requestUri);

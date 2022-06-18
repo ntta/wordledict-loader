@@ -1,6 +1,6 @@
 import 'package:sembast/sembast.dart';
-import 'package:wordledict_loader/core/infrastructure/sembast_database.dart';
-import 'package:wordledict_loader/core/infrastructure/word_dto.dart';
+import 'package:wordledict_loader/core/infrastructure/database/sembast_database.dart';
+import 'package:wordledict_loader/core/infrastructure/words/word_dto.dart';
 
 class LoaderService {
   final SembastDatabase _sembastDatabase;
