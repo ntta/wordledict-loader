@@ -2,7 +2,6 @@ import 'package:dio/dio.dart';
 import 'package:sembast/sembast.dart';
 import 'package:wordledict_loader/core/infrastructure/database/sembast_database.dart';
 import 'package:wordledict_loader/core/infrastructure/network/dio_extensions.dart';
-import 'package:wordledict_loader/core/infrastructure/network/remote_response.dart';
 import 'package:wordledict_loader/core/infrastructure/network/rest_api_exception.dart';
 import 'package:wordledict_loader/core/infrastructure/settings/settings_repository.dart';
 import 'package:wordledict_loader/core/infrastructure/words/word_dto.dart';
@@ -19,13 +18,14 @@ class WordsService {
       .record(wordDto.id)
       .put(_sembastDatabase.instance, wordDto.toJson());
 
-  Future<void> insertRawWord(String rawWord) =>
-      _store.record(rawWord).put(_sembastDatabase.instance, {'id': rawWord});
+  Future<void> insertPlainWord(String plainWord) => _store
+      .record(plainWord)
+      .put(_sembastDatabase.instance, {'id': plainWord});
 
-  Future<void> insertRawWords(List<String> rawWords) =>
-      _store.records(rawWords).put(
+  Future<void> insertPlainWords(List<String> plainWords) =>
+      _store.records(plainWords).put(
             _sembastDatabase.instance,
-            rawWords.map((rawWord) => {'id': rawWord}).toList(),
+            plainWords.map((rawWord) => {'id': rawWord}).toList(),
           );
 
   Future<List<WordDto>> getWords() =>
@@ -33,13 +33,25 @@ class WordsService {
             (records) => records.map((e) => WordDto.fromJson(e.value)).toList(),
           );
 
-  Future<RemoteResponse<WordDto>> getWordFromDictionaryApi(
-    String rawWord,
+  Future<List<WordDto>> getUncheckedWords() => _store
+      .find(
+        _sembastDatabase.instance,
+        finder: Finder(
+          filter: Filter.equals('isChecked', false),
+        ),
+      )
+      .then(
+        (records) => records.map((e) => WordDto.fromJson(e.value)).toList(),
+      );
+
+  Future<WordDto> getWordFromDictionaryApi(
+    WordDto wordDto,
   ) async {
+    final plainWord = wordDto.id;
     final dictionaryApiKey =
         locator<SettingsRepository>().dictionaryApiKey ?? '';
     final requestUri = Uri.parse('https://www.dictionaryapi.com').replace(
-      path: 'api/v3/references/learners/json/$rawWord',
+      path: 'api/v3/references/learners/json/$plainWord',
       queryParameters: {'key': dictionaryApiKey},
     );
     try {
@@ -56,7 +68,7 @@ class WordsService {
       for (final element in dataList) {
         if (element is String) {
           // Once the element is string, it means that no meaning found for this word
-          return const RemoteResponse.withNoData();
+          break;
         }
         if (element['hom'] != null) {
           // If 'hom' exists, it is origin word
@@ -67,16 +79,20 @@ class WordsService {
         }
       }
 
-      return RemoteResponse.withData(
-        WordDto(
-          id: rawWord,
-          origin: origin,
-          meanings: meanings.isNotEmpty ? meanings : null,
-        ),
+      final newWordDto = WordDto(
+        id: plainWord,
+        isChecked: true,
+        origin: origin,
+        meanings: meanings.isNotEmpty ? meanings : null,
       );
+
+      // Save to database
+      await insertWord(newWordDto);
+
+      return newWordDto;
     } on DioError catch (e) {
       if (e.isNoConnectionError) {
-        return const RemoteResponse.noConnection();
+        throw RestApiException(503);
       } else if (e.response != null) {
         throw RestApiException(e.response?.statusCode);
       } else {

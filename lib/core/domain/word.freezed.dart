@@ -17,6 +17,7 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$Word {
   String get id => throw _privateConstructorUsedError;
+  bool get isChecked => throw _privateConstructorUsedError;
   String? get origin => throw _privateConstructorUsedError;
   Map<String, List<String>>? get meanings => throw _privateConstructorUsedError;
 
@@ -28,7 +29,11 @@ mixin _$Word {
 abstract class $WordCopyWith<$Res> {
   factory $WordCopyWith(Word value, $Res Function(Word) then) =
       _$WordCopyWithImpl<$Res>;
-  $Res call({String id, String? origin, Map<String, List<String>>? meanings});
+  $Res call(
+      {String id,
+      bool isChecked,
+      String? origin,
+      Map<String, List<String>>? meanings});
 }
 
 /// @nodoc
@@ -42,6 +47,7 @@ class _$WordCopyWithImpl<$Res> implements $WordCopyWith<$Res> {
   @override
   $Res call({
     Object? id = freezed,
+    Object? isChecked = freezed,
     Object? origin = freezed,
     Object? meanings = freezed,
   }) {
@@ -50,6 +56,10 @@ class _$WordCopyWithImpl<$Res> implements $WordCopyWith<$Res> {
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
+      isChecked: isChecked == freezed
+          ? _value.isChecked
+          : isChecked // ignore: cast_nullable_to_non_nullable
+              as bool,
       origin: origin == freezed
           ? _value.origin
           : origin // ignore: cast_nullable_to_non_nullable
@@ -67,7 +77,11 @@ abstract class _$$_WordCopyWith<$Res> implements $WordCopyWith<$Res> {
   factory _$$_WordCopyWith(_$_Word value, $Res Function(_$_Word) then) =
       __$$_WordCopyWithImpl<$Res>;
   @override
-  $Res call({String id, String? origin, Map<String, List<String>>? meanings});
+  $Res call(
+      {String id,
+      bool isChecked,
+      String? origin,
+      Map<String, List<String>>? meanings});
 }
 
 /// @nodoc
@@ -82,6 +96,7 @@ class __$$_WordCopyWithImpl<$Res> extends _$WordCopyWithImpl<$Res>
   @override
   $Res call({
     Object? id = freezed,
+    Object? isChecked = freezed,
     Object? origin = freezed,
     Object? meanings = freezed,
   }) {
@@ -90,6 +105,10 @@ class __$$_WordCopyWithImpl<$Res> extends _$WordCopyWithImpl<$Res>
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
+      isChecked: isChecked == freezed
+          ? _value.isChecked
+          : isChecked // ignore: cast_nullable_to_non_nullable
+              as bool,
       origin: origin == freezed
           ? _value.origin
           : origin // ignore: cast_nullable_to_non_nullable
@@ -107,6 +126,7 @@ class __$$_WordCopyWithImpl<$Res> extends _$WordCopyWithImpl<$Res>
 class _$_Word extends _Word {
   const _$_Word(
       {required this.id,
+      required this.isChecked,
       required this.origin,
       required final Map<String, List<String>>? meanings})
       : _meanings = meanings,
@@ -114,6 +134,8 @@ class _$_Word extends _Word {
 
   @override
   final String id;
+  @override
+  final bool isChecked;
   @override
   final String? origin;
   final Map<String, List<String>>? _meanings;
@@ -127,7 +149,7 @@ class _$_Word extends _Word {
 
   @override
   String toString() {
-    return 'Word(id: $id, origin: $origin, meanings: $meanings)';
+    return 'Word(id: $id, isChecked: $isChecked, origin: $origin, meanings: $meanings)';
   }
 
   @override
@@ -136,6 +158,7 @@ class _$_Word extends _Word {
         (other.runtimeType == runtimeType &&
             other is _$_Word &&
             const DeepCollectionEquality().equals(other.id, id) &&
+            const DeepCollectionEquality().equals(other.isChecked, isChecked) &&
             const DeepCollectionEquality().equals(other.origin, origin) &&
             const DeepCollectionEquality().equals(other._meanings, _meanings));
   }
@@ -144,6 +167,7 @@ class _$_Word extends _Word {
   int get hashCode => Object.hash(
       runtimeType,
       const DeepCollectionEquality().hash(id),
+      const DeepCollectionEquality().hash(isChecked),
       const DeepCollectionEquality().hash(origin),
       const DeepCollectionEquality().hash(_meanings));
 
@@ -156,12 +180,15 @@ class _$_Word extends _Word {
 abstract class _Word extends Word {
   const factory _Word(
       {required final String id,
+      required final bool isChecked,
       required final String? origin,
       required final Map<String, List<String>>? meanings}) = _$_Word;
   const _Word._() : super._();
 
   @override
   String get id => throw _privateConstructorUsedError;
+  @override
+  bool get isChecked => throw _privateConstructorUsedError;
   @override
   String? get origin => throw _privateConstructorUsedError;
   @override
