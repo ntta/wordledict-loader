@@ -1,6 +1,30 @@
 part of 'loader_bloc.dart';
 
-@immutable
-abstract class LoaderState {}
+abstract class LoaderState extends Equatable {
+  const LoaderState();
+}
 
-class LoaderInitial extends LoaderState {}
+class LoaderLoadInProgress extends LoaderState {
+  const LoaderLoadInProgress();
+
+  @override
+  List<Object?> get props => [];
+}
+
+class LoaderLoadSuccess extends LoaderState {
+  const LoaderLoadSuccess(this.words);
+
+  final List<Word> words;
+
+  @override
+  List<Object?> get props => [];
+}
+
+class LoaderLoadFailure extends LoaderState {
+  const LoaderLoadFailure(this.failure);
+
+  final DictionaryFailure failure;
+
+  @override
+  List<Object?> get props => [];
+}

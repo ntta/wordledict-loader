@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:wordledict_loader/loader/presentation/widgets/buttons_bar.dart';
-import 'package:wordledict_loader/loader/presentation/widgets/search_bar.dart';
-import 'package:wordledict_loader/loader/presentation/widgets/words_table.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:wordledict_loader/loader/bloc/loader_bloc.dart';
+import 'package:wordledict_loader/loader/presentation/loader_container.dart';
 
 class LoaderPage extends StatelessWidget {
   const LoaderPage({Key? key}) : super(key: key);
@@ -18,46 +18,21 @@ class LoaderPage extends StatelessWidget {
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 50),
-        child: Column(
-          children: [
-            SizedBox(
-              height: 100,
-              child: Row(
-                children: [
-                  const Expanded(child: SearchBar()),
-                  Expanded(child: Container()),
-                ],
-              ),
-            ),
-            Expanded(
-              child: Row(
-                children: [
-                  Expanded(
-                    child: WordsTable(),
-                  ),
-                  const Expanded(
-                    child: Center(
-                      child: Text(
-                        'Select a word from the table to see its meaning',
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(
-              height: 100,
-              child: Row(
-                children: [
-                  const Expanded(child: ButtonsBar()),
-                  Expanded(child: Container()),
-                ],
-              ),
-            ),
-          ],
-        ),
+      body: BlocBuilder<LoaderBloc, LoaderState>(
+        buildWhen: (previous, current) => current is LoaderLoadSuccess,
+        builder: (context, state) {
+          if (state is LoaderLoadSuccess) {
+            return LoaderContainer(state.words);
+          }
+
+          if (state is LoaderLoadFailure) {
+            print('LOAD IS FAILED');
+          }
+
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        },
       ),
     );
   }

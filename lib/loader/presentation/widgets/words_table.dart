@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:wordledict_loader/core/domain/word.dart';
 import 'package:wordledict_loader/loader/presentation/widgets/words_data_source.dart';
 
 class WordsTable extends StatelessWidget {
-  WordsTable({Key? key}) : super(key: key);
+  const WordsTable(this.words, {Key? key}) : super(key: key);
 
-  final wordsDataSource = WordsDataSource();
+  final List<Word> words;
 
   @override
   Widget build(BuildContext context) {
+    final wordsDataSource = WordsDataSource(words);
     return SingleChildScrollView(
       child: PaginatedDataTable(
         sortColumnIndex: 0,

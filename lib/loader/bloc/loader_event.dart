@@ -1,4 +1,12 @@
 part of 'loader_bloc.dart';
 
-@immutable
-abstract class LoaderEvent {}
+abstract class LoaderEvent extends Equatable {
+  const LoaderEvent();
+}
+
+class LoaderStarted extends LoaderEvent {
+  const LoaderStarted();
+
+  @override
+  List<Object?> get props => [];
+}
