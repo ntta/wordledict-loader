@@ -10,3 +10,12 @@ class LoaderStarted extends LoaderEvent {
   @override
   List<Object?> get props => [];
 }
+
+class WordSubmitted extends LoaderEvent {
+  const WordSubmitted(this.plainWord);
+
+  final String plainWord;
+
+  @override
+  List<Object?> get props => [];
+}

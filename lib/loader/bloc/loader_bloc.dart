@@ -12,6 +12,7 @@ class LoaderBloc extends Bloc<LoaderEvent, LoaderState> {
 
   LoaderBloc(this._wordsRepository) : super(const LoaderLoadInProgress()) {
     on<LoaderStarted>(_onLoaderStarted);
+    on<WordSubmitted>(_onWordSubmitted);
   }
 
   Future<void> _onLoaderStarted(
@@ -21,5 +22,14 @@ class LoaderBloc extends Bloc<LoaderEvent, LoaderState> {
     emit(const LoaderLoadInProgress());
     final words = await _wordsRepository.getWords();
     emit(LoaderLoadSuccess(words));
+  }
+
+    Future<void> _onWordSubmitted(
+    WordSubmitted event,
+    Emitter<LoaderState> emit,
+  ) async {
+    emit(const WordSubmitInProgress());
+    await _wordsRepository.insertPlainWord(event.plainWord);
+    emit(const WordSubmitSuccess());
   }
 }

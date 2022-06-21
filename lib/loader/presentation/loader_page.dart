@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wordledict_loader/loader/bloc/loader_bloc.dart';
 import 'package:wordledict_loader/loader/presentation/loader_container.dart';
+import 'package:wordledict_loader/settings/presentation/settings_dialog.dart';
 
 class LoaderPage extends StatelessWidget {
   const LoaderPage({Key? key}) : super(key: key);
@@ -14,7 +15,14 @@ class LoaderPage extends StatelessWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.settings),
-            onPressed: () {},
+            onPressed: () {
+              showDialog(
+                  barrierDismissible: false,
+                  context: context,
+                  builder: (context) {
+                    return SettingsDialog();
+                  });
+            },
           ),
         ],
       ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wordledict_loader/loader/presentation/widgets/new_word_dialog.dart';
 
 class ButtonsBar extends StatelessWidget {
   const ButtonsBar({Key? key}) : super(key: key);
@@ -28,7 +29,13 @@ class ButtonsBar extends StatelessWidget {
         IconButton(
           iconSize: 35,
           icon: const Icon(Icons.add_box),
-          onPressed: () {},
+          onPressed: () {
+            showDialog(
+                context: context,
+                builder: (context) {
+                  return NewWordDialog();
+                });
+          },
         ),
       ],
     );

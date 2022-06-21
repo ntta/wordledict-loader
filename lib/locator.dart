@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:wordledict_loader/core/infrastructure/database/sembast_database.dart';
 import 'package:wordledict_loader/core/infrastructure/database/shared_preferences_database.dart';
+import 'package:wordledict_loader/core/infrastructure/settings/settings_repository.dart';
 import 'package:wordledict_loader/core/infrastructure/words/words_repository.dart';
 import 'package:wordledict_loader/core/infrastructure/words/words_service.dart';
 import 'package:wordledict_loader/loader/bloc/loader_bloc.dart';
@@ -17,6 +18,8 @@ Future<void> setup() async {
 
   final sharedPreferencesDatabase = SharedPreferencesDatabase();
   await sharedPreferencesDatabase.init();
+  locator.registerLazySingleton<SharedPreferencesDatabase>(
+      () => sharedPreferencesDatabase);
 
   locator.registerLazySingleton<WordsService>(
     () => WordsService(locator<SembastDatabase>(), locator<Dio>()),
@@ -25,6 +28,11 @@ Future<void> setup() async {
   locator.registerLazySingleton<WordsRepository>(
     () => WordsRepository(
       locator<WordsService>(),
+    ),
+  );
+  locator.registerLazySingleton<SettingsRepository>(
+    () => SettingsRepository(
+      locator<SharedPreferencesDatabase>(),
     ),
   );
 

@@ -28,3 +28,17 @@ class LoaderLoadFailure extends LoaderState {
   @override
   List<Object?> get props => [];
 }
+
+class WordSubmitInProgress extends LoaderState {
+  const WordSubmitInProgress();
+
+  @override
+  List<Object?> get props => [];
+}
+
+class WordSubmitSuccess extends LoaderState {
+  const WordSubmitSuccess();
+
+  @override
+  List<Object?> get props => [];
+}
