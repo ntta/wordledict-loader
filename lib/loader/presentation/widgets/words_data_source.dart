@@ -12,7 +12,7 @@ class WordsDataSource extends DataTableSource {
       cells: [
         DataCell(Text('${index + 1}')),
         DataCell(Text(words[index].id)),
-        const DataCell(Text('')),
+        DataCell(Text(words[index].origin)),
       ],
     );
   }

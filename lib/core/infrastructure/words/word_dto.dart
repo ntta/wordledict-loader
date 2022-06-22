@@ -10,9 +10,8 @@ class WordDto with _$WordDto {
   const WordDto._();
   const factory WordDto({
     required String id,
-    @Default(false) bool isChecked,
-    String? origin,
-    Map<String, List<String>>? meanings,
+    required String origin,
+    required Map<String, List<String>> meanings,
   }) = _WordDto;
 
   factory WordDto.fromJson(Map<String, dynamic> json) =>
@@ -21,7 +20,6 @@ class WordDto with _$WordDto {
   factory WordDto.fromDomain(Word _) {
     return WordDto(
       id: _.id,
-      isChecked: _.isChecked,
       origin: _.origin,
       meanings: _.meanings,
     );
@@ -30,7 +28,6 @@ class WordDto with _$WordDto {
   Word toDomain() {
     return Word(
       id: id,
-      isChecked: isChecked,
       origin: origin,
       meanings: meanings,
     );

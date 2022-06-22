@@ -7,8 +7,7 @@ class Word with _$Word {
   const Word._();
   const factory Word({
     required String id,
-    required bool isChecked,
-    required String? origin,
-    required Map<String, List<String>>? meanings,
+    required String origin,
+    required Map<String, List<String>> meanings,
   }) = _Word;
 }

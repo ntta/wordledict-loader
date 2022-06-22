@@ -1,27 +1,27 @@
 part of 'loader_bloc.dart';
 
 abstract class LoaderState extends Equatable {
-  const LoaderState();
+  const LoaderState(this.words);
+
+  final List<Word> words;
 }
 
 class LoaderLoadInProgress extends LoaderState {
-  const LoaderLoadInProgress();
+  const LoaderLoadInProgress(List<Word> words) : super(words);
 
   @override
   List<Object?> get props => [];
 }
 
 class LoaderLoadSuccess extends LoaderState {
-  const LoaderLoadSuccess(this.words);
-
-  final List<Word> words;
+  const LoaderLoadSuccess(List<Word> words) : super(words);
 
   @override
   List<Object?> get props => [];
 }
 
 class LoaderLoadFailure extends LoaderState {
-  const LoaderLoadFailure(this.failure);
+  const LoaderLoadFailure(List<Word> words, this.failure) : super(words);
 
   final DictionaryFailure failure;
 
@@ -29,15 +29,37 @@ class LoaderLoadFailure extends LoaderState {
   List<Object?> get props => [];
 }
 
-class WordSubmitInProgress extends LoaderState {
-  const WordSubmitInProgress();
+class WordSubmitFailure extends LoaderState {
+  const WordSubmitFailure(List<Word> words, this.failure) : super(words);
+
+  final DictionaryFailure failure;
 
   @override
   List<Object?> get props => [];
 }
 
-class WordSubmitSuccess extends LoaderState {
-  const WordSubmitSuccess();
+class WordSubmitNoMeaning extends LoaderState {
+  const WordSubmitNoMeaning(List<Word> words, this.plainWord) : super(words);
+
+  final String plainWord;
+
+  @override
+  List<Object?> get props => [];
+}
+
+class WordSubmitWithMeaning extends LoaderState {
+  const WordSubmitWithMeaning(List<Word> words, this.word) : super(words);
+
+  final Word word;
+
+  @override
+  List<Object?> get props => [];
+}
+
+class WordSubmitDuplicate extends LoaderState {
+  const WordSubmitDuplicate(List<Word> words, this.word) : super(words);
+
+  final Word word;
 
   @override
   List<Object?> get props => [];

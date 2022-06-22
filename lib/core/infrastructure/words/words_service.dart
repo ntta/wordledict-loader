@@ -5,6 +5,7 @@ import 'package:wordledict_loader/core/infrastructure/network/dio_extensions.dar
 import 'package:wordledict_loader/core/infrastructure/network/rest_api_exception.dart';
 import 'package:wordledict_loader/core/infrastructure/settings/settings_repository.dart';
 import 'package:wordledict_loader/core/infrastructure/words/word_dto.dart';
+import 'package:wordledict_loader/core/infrastructure/words/word_response.dart';
 import 'package:wordledict_loader/locator.dart';
 
 class WordsService {
@@ -14,40 +15,38 @@ class WordsService {
 
   WordsService(this._sembastDatabase, this._dio);
 
-  Future<void> insertWord(WordDto wordDto) => _store
-      .record(wordDto.id)
-      .put(_sembastDatabase.instance, wordDto.toJson());
+  Future<WordResponse<WordDto>> insertWord(String plainWord) async {
+    final existingWord =
+        await _store.record(plainWord).get(_sembastDatabase.instance);
+    if (existingWord == null) {
+      final wordDto = await _getMeaningsFromDictionaryApi(plainWord);
 
-  Future<void> insertPlainWord(String plainWord) => _store
-      .record(plainWord)
-      .put(_sembastDatabase.instance, {'id': plainWord});
+      if (wordDto == null) {
+        // Do not save word that has no meaning
+        return const WordResponse.noMeaning();
+      }
 
-  Future<void> insertPlainWords(List<String> plainWords) =>
-      _store.records(plainWords).put(
-            _sembastDatabase.instance,
-            plainWords.map((rawWord) => {'id': rawWord}).toList(),
-          );
+      await _store
+          .record(plainWord)
+          .put(_sembastDatabase.instance, wordDto.toJson());
+      return WordResponse.withMeaning(wordDto);
+    }
 
-  Future<List<WordDto>> getWords() =>
-      _store.find(_sembastDatabase.instance).then(
-            (records) => records.map((e) => WordDto.fromJson(e.value)).toList(),
-          );
+    return WordResponse.duplicate(WordDto.fromJson(existingWord));
+  }
 
-  Future<List<WordDto>> getUncheckedWords() => _store
+  Future<List<WordDto>> getWords() => _store
       .find(
         _sembastDatabase.instance,
         finder: Finder(
-          filter: Filter.equals('isChecked', false),
+          sortOrders: [SortOrder(Field.key)],
         ),
       )
       .then(
         (records) => records.map((e) => WordDto.fromJson(e.value)).toList(),
       );
 
-  Future<WordDto> getWordFromDictionaryApi(
-    WordDto wordDto,
-  ) async {
-    final plainWord = wordDto.id;
+  Future<WordDto?> _getMeaningsFromDictionaryApi(String plainWord) async {
     final dictionaryApiKey =
         locator<SettingsRepository>().dictionaryApiKey ?? '';
     final requestUri = Uri.parse('https://www.dictionaryapi.com').replace(
@@ -74,22 +73,20 @@ class WordsService {
           // If 'hom' exists, it is origin word
           origin = element['hwi']['hw'];
           final key = element['meta']['app-shortdef']['fl']; // noun, verb, etc.
-          final value = element['meta']['app-shortdef']['def'];
-          meanings[key] = value;
+          final value = element['meta']['app-shortdef']['def'] as List<dynamic>;
+          meanings[key] = value.cast<String>();
         }
       }
 
-      final newWordDto = WordDto(
-        id: plainWord,
-        isChecked: true,
-        origin: origin,
-        meanings: meanings.isNotEmpty ? meanings : null,
-      );
+      if (origin != null && meanings.isNotEmpty) {
+        return WordDto(
+          id: plainWord,
+          origin: origin,
+          meanings: meanings,
+        );
+      }
 
-      // Save to database
-      await insertWord(newWordDto);
-
-      return newWordDto;
+      return null;
     } on DioError catch (e) {
       if (e.isNoConnectionError) {
         throw RestApiException(503);

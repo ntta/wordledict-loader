@@ -21,9 +21,8 @@ WordDto _$WordDtoFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$WordDto {
   String get id => throw _privateConstructorUsedError;
-  bool get isChecked => throw _privateConstructorUsedError;
-  String? get origin => throw _privateConstructorUsedError;
-  Map<String, List<String>>? get meanings => throw _privateConstructorUsedError;
+  String get origin => throw _privateConstructorUsedError;
+  Map<String, List<String>> get meanings => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -34,11 +33,7 @@ mixin _$WordDto {
 abstract class $WordDtoCopyWith<$Res> {
   factory $WordDtoCopyWith(WordDto value, $Res Function(WordDto) then) =
       _$WordDtoCopyWithImpl<$Res>;
-  $Res call(
-      {String id,
-      bool isChecked,
-      String? origin,
-      Map<String, List<String>>? meanings});
+  $Res call({String id, String origin, Map<String, List<String>> meanings});
 }
 
 /// @nodoc
@@ -52,7 +47,6 @@ class _$WordDtoCopyWithImpl<$Res> implements $WordDtoCopyWith<$Res> {
   @override
   $Res call({
     Object? id = freezed,
-    Object? isChecked = freezed,
     Object? origin = freezed,
     Object? meanings = freezed,
   }) {
@@ -61,18 +55,14 @@ class _$WordDtoCopyWithImpl<$Res> implements $WordDtoCopyWith<$Res> {
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
-      isChecked: isChecked == freezed
-          ? _value.isChecked
-          : isChecked // ignore: cast_nullable_to_non_nullable
-              as bool,
       origin: origin == freezed
           ? _value.origin
           : origin // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as String,
       meanings: meanings == freezed
           ? _value.meanings
           : meanings // ignore: cast_nullable_to_non_nullable
-              as Map<String, List<String>>?,
+              as Map<String, List<String>>,
     ));
   }
 }
@@ -83,11 +73,7 @@ abstract class _$$_WordDtoCopyWith<$Res> implements $WordDtoCopyWith<$Res> {
           _$_WordDto value, $Res Function(_$_WordDto) then) =
       __$$_WordDtoCopyWithImpl<$Res>;
   @override
-  $Res call(
-      {String id,
-      bool isChecked,
-      String? origin,
-      Map<String, List<String>>? meanings});
+  $Res call({String id, String origin, Map<String, List<String>> meanings});
 }
 
 /// @nodoc
@@ -102,7 +88,6 @@ class __$$_WordDtoCopyWithImpl<$Res> extends _$WordDtoCopyWithImpl<$Res>
   @override
   $Res call({
     Object? id = freezed,
-    Object? isChecked = freezed,
     Object? origin = freezed,
     Object? meanings = freezed,
   }) {
@@ -111,18 +96,14 @@ class __$$_WordDtoCopyWithImpl<$Res> extends _$WordDtoCopyWithImpl<$Res>
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
-      isChecked: isChecked == freezed
-          ? _value.isChecked
-          : isChecked // ignore: cast_nullable_to_non_nullable
-              as bool,
       origin: origin == freezed
           ? _value.origin
           : origin // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as String,
       meanings: meanings == freezed
           ? _value._meanings
           : meanings // ignore: cast_nullable_to_non_nullable
-              as Map<String, List<String>>?,
+              as Map<String, List<String>>,
     ));
   }
 }
@@ -132,9 +113,8 @@ class __$$_WordDtoCopyWithImpl<$Res> extends _$WordDtoCopyWithImpl<$Res>
 class _$_WordDto extends _WordDto {
   const _$_WordDto(
       {required this.id,
-      this.isChecked = false,
-      this.origin,
-      final Map<String, List<String>>? meanings})
+      required this.origin,
+      required final Map<String, List<String>> meanings})
       : _meanings = meanings,
         super._();
 
@@ -144,22 +124,17 @@ class _$_WordDto extends _WordDto {
   @override
   final String id;
   @override
-  @JsonKey()
-  final bool isChecked;
+  final String origin;
+  final Map<String, List<String>> _meanings;
   @override
-  final String? origin;
-  final Map<String, List<String>>? _meanings;
-  @override
-  Map<String, List<String>>? get meanings {
-    final value = _meanings;
-    if (value == null) return null;
+  Map<String, List<String>> get meanings {
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableMapView(value);
+    return EqualUnmodifiableMapView(_meanings);
   }
 
   @override
   String toString() {
-    return 'WordDto(id: $id, isChecked: $isChecked, origin: $origin, meanings: $meanings)';
+    return 'WordDto(id: $id, origin: $origin, meanings: $meanings)';
   }
 
   @override
@@ -168,7 +143,6 @@ class _$_WordDto extends _WordDto {
         (other.runtimeType == runtimeType &&
             other is _$_WordDto &&
             const DeepCollectionEquality().equals(other.id, id) &&
-            const DeepCollectionEquality().equals(other.isChecked, isChecked) &&
             const DeepCollectionEquality().equals(other.origin, origin) &&
             const DeepCollectionEquality().equals(other._meanings, _meanings));
   }
@@ -178,7 +152,6 @@ class _$_WordDto extends _WordDto {
   int get hashCode => Object.hash(
       runtimeType,
       const DeepCollectionEquality().hash(id),
-      const DeepCollectionEquality().hash(isChecked),
       const DeepCollectionEquality().hash(origin),
       const DeepCollectionEquality().hash(_meanings));
 
@@ -196,9 +169,8 @@ class _$_WordDto extends _WordDto {
 abstract class _WordDto extends WordDto {
   const factory _WordDto(
       {required final String id,
-      final bool isChecked,
-      final String? origin,
-      final Map<String, List<String>>? meanings}) = _$_WordDto;
+      required final String origin,
+      required final Map<String, List<String>> meanings}) = _$_WordDto;
   const _WordDto._() : super._();
 
   factory _WordDto.fromJson(Map<String, dynamic> json) = _$_WordDto.fromJson;
@@ -206,11 +178,9 @@ abstract class _WordDto extends WordDto {
   @override
   String get id => throw _privateConstructorUsedError;
   @override
-  bool get isChecked => throw _privateConstructorUsedError;
+  String get origin => throw _privateConstructorUsedError;
   @override
-  String? get origin => throw _privateConstructorUsedError;
-  @override
-  Map<String, List<String>>? get meanings => throw _privateConstructorUsedError;
+  Map<String, List<String>> get meanings => throw _privateConstructorUsedError;
   @override
   @JsonKey(ignore: true)
   _$$_WordDtoCopyWith<_$_WordDto> get copyWith =>

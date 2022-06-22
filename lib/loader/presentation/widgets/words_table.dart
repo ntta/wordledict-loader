@@ -18,7 +18,7 @@ class WordsTable extends StatelessWidget {
         columns: const [
           DataColumn(label: Text('#')),
           DataColumn(label: Text('Word')),
-          DataColumn(label: Text('Dictionary')),
+          DataColumn(label: Text('Origin')),
         ],
         rowsPerPage: 15,
         source: wordsDataSource,
