@@ -28,6 +28,8 @@ class LoaderBloc extends Bloc<LoaderEvent, LoaderState> {
     WordSubmitted event,
     Emitter<LoaderState> emit,
   ) async {
+    // My gut tells me something is wrong in this function
+    // Looks like the state emittings are not right
     emit(LoaderLoadInProgress(state.words));
     final response = await _wordsRepository.insertPlainWord(event.plainWord);
     if (response.isLeft()) {

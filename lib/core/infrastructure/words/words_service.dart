@@ -69,13 +69,18 @@ class WordsService {
           // Once the element is string, it means that no meaning found for this word
           break;
         }
-        if (element['hom'] != null) {
-          // If 'hom' exists, it is origin word
-          origin = element['hwi']['hw'];
-          final key = element['meta']['app-shortdef']['fl']; // noun, verb, etc.
-          final value = element['meta']['app-shortdef']['def'] as List<dynamic>;
-          meanings[key] = value.cast<String>();
+        final originAndIndex = (element['meta']['id'] as String).split(':');
+        if (origin == null) {
+          origin = originAndIndex[0];
+        } else {
+          if (originAndIndex[0] != origin) {
+            continue;
+          }
         }
+
+        final key = element['meta']['app-shortdef']['fl']; // noun, verb, etc.
+        final value = element['meta']['app-shortdef']['def'] as List<dynamic>;
+        meanings[key] = value.cast<String>();
       }
 
       if (origin != null && meanings.isNotEmpty) {

@@ -20,7 +20,7 @@ class LoaderPage extends StatelessWidget {
                   barrierDismissible: false,
                   context: context,
                   builder: (context) {
-                    return SettingsDialog();
+                    return const SettingsDialog();
                   });
             },
           ),
