@@ -6,7 +6,7 @@ import 'package:wordledict_loader/core/infrastructure/database/shared_preference
 import 'package:wordledict_loader/core/infrastructure/settings/settings_repository.dart';
 import 'package:wordledict_loader/core/infrastructure/words/words_repository.dart';
 import 'package:wordledict_loader/core/infrastructure/words/words_service.dart';
-import 'package:wordledict_loader/loader/bloc/loader_bloc.dart';
+import 'package:wordledict_loader/loader_overview/bloc/loader_overview_bloc.dart';
 
 final locator = GetIt.instance;
 
@@ -40,8 +40,8 @@ Future<void> setup() async {
     ),
   );
 
-  locator.registerLazySingleton<LoaderBloc>(
-    () => LoaderBloc(
+  locator.registerLazySingleton<LoaderOverviewBloc>(
+    () => LoaderOverviewBloc(
       locator<WordsRepository>(),
     ),
   );

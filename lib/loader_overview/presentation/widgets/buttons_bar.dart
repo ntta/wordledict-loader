@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:wordledict_loader/loader/presentation/widgets/new_word_dialog.dart';
+import 'package:wordledict_loader/loader_overview/presentation/widgets/new_word_dialog.dart';
 
 class ButtonsBar extends StatelessWidget {
   const ButtonsBar({Key? key}) : super(key: key);

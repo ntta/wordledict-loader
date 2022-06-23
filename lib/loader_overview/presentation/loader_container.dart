@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:wordledict_loader/core/domain/word.dart';
-import 'package:wordledict_loader/loader/presentation/widgets/buttons_bar.dart';
-import 'package:wordledict_loader/loader/presentation/widgets/search_bar.dart';
-import 'package:wordledict_loader/loader/presentation/widgets/words_table.dart';
+import 'package:wordledict_loader/loader_overview/presentation/widgets/buttons_bar.dart';
+import 'package:wordledict_loader/loader_overview/presentation/widgets/search_bar.dart';
+import 'package:wordledict_loader/loader_overview/presentation/widgets/words_table.dart';
 
 class LoaderContainer extends StatelessWidget {
   const LoaderContainer(

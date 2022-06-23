@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:wordledict_loader/loader/bloc/loader_bloc.dart';
+import 'package:wordledict_loader/loader_overview/bloc/loader_overview_bloc.dart';
 import 'package:wordledict_loader/locator.dart';
 
 class NewWordDialog extends StatelessWidget {
@@ -38,7 +38,7 @@ class NewWordDialog extends StatelessWidget {
           onPressed: () {
             if (formKey.currentState!.validate()) {
               // print(_newWordInputController.text);
-              locator<LoaderBloc>().add(
+              locator<LoaderOverviewBloc>().add(
                 WordSubmitted(
                   newWordInputController.text.toLowerCase(),
                 ),

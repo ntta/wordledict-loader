@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:wordledict_loader/loader/bloc/loader_bloc.dart';
-import 'package:wordledict_loader/loader/presentation/loader_container.dart';
+import 'package:wordledict_loader/loader_overview/bloc/loader_overview_bloc.dart';
+import 'package:wordledict_loader/loader_overview/presentation/loader_container.dart';
 import 'package:wordledict_loader/settings/presentation/settings_dialog.dart';
 
 class LoaderPage extends StatelessWidget {
@@ -26,7 +26,7 @@ class LoaderPage extends StatelessWidget {
           ),
         ],
       ),
-      body: BlocBuilder<LoaderBloc, LoaderState>(
+      body: BlocBuilder<LoaderOverviewBloc, LoaderOverviewState>(
         buildWhen: (previous, current) => current is LoaderLoadSuccess,
         builder: (context, state) {
           if (state is LoaderLoadSuccess) {

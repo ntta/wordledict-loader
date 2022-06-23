@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:wordledict_loader/loader/bloc/loader_bloc.dart';
-import 'package:wordledict_loader/loader/presentation/loader_page.dart';
+import 'package:wordledict_loader/loader_overview/bloc/loader_overview_bloc.dart';
+import 'package:wordledict_loader/loader_overview/presentation/loader_page.dart';
 import 'package:wordledict_loader/locator.dart';
 
 Future<void> main() async {
@@ -18,7 +18,8 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (_) => locator<LoaderBloc>()..add(const LoaderStarted()),
+          create: (_) =>
+              locator<LoaderOverviewBloc>()..add(const LoaderStarted()),
         ),
       ],
       child: MaterialApp(
