@@ -1,16 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:wordledict_loader/core/domain/word.dart';
 import 'package:wordledict_loader/loader_overview/presentation/widgets/buttons_bar.dart';
 import 'package:wordledict_loader/loader_overview/presentation/widgets/search_bar.dart';
 import 'package:wordledict_loader/loader_overview/presentation/widgets/words_table.dart';
 
 class LoaderContainer extends StatelessWidget {
-  const LoaderContainer(
-    this.words, {
-    Key? key,
-  }) : super(key: key);
-
-  final List<Word> words;
+  const LoaderContainer({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -29,11 +23,11 @@ class LoaderContainer extends StatelessWidget {
           ),
           Expanded(
             child: Row(
-              children: [
+              children: const [
                 Expanded(
-                  child: WordsTable(words),
+                  child: WordsTable(),
                 ),
-                const Expanded(
+                Expanded(
                   child: Center(
                     child: Text(
                       'Select a word from the table to see its meaning',

@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider(
           create: (_) =>
-              locator<LoaderOverviewBloc>()..add(const LoaderStarted()),
+              locator<LoaderOverviewBloc>()..add(const LoaderOverviewStarted()),
         ),
       ],
       child: MaterialApp(

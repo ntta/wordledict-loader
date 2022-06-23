@@ -37,10 +37,9 @@ class NewWordDialog extends StatelessWidget {
         TextButton(
           onPressed: () {
             if (formKey.currentState!.validate()) {
-              // print(_newWordInputController.text);
               locator<LoaderOverviewBloc>().add(
-                WordSubmitted(
-                  newWordInputController.text.toLowerCase(),
+                LoaderOverviewWordSubmitted(
+                  plainWord: newWordInputController.text.toLowerCase(),
                 ),
               );
               Navigator.of(context).pop();

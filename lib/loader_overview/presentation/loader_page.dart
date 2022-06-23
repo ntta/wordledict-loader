@@ -26,21 +26,33 @@ class LoaderPage extends StatelessWidget {
           ),
         ],
       ),
-      body: BlocBuilder<LoaderOverviewBloc, LoaderOverviewState>(
-        buildWhen: (previous, current) => current is LoaderLoadSuccess,
-        builder: (context, state) {
-          if (state is LoaderLoadSuccess) {
-            return LoaderContainer(state.words);
-          }
+      body: MultiBlocListener(
+        listeners: [
+          BlocListener<LoaderOverviewBloc, LoaderOverviewState>(
+            listenWhen: (previous, current) =>
+                previous.message != current.message,
+            listener: ((context, state) {
+              if (state.message != null) {
+                ScaffoldMessenger.of(context)
+                  ..hideCurrentSnackBar()
+                  ..showSnackBar(
+                    SnackBar(
+                      content: Text(state.message!),
+                    ),
+                  );
+              }
+            }),
+          ),
+        ],
+        child: BlocBuilder<LoaderOverviewBloc, LoaderOverviewState>(
+          builder: (context, state) {
+            if (state.status == LoaderOverviewStatus.loading) {
+              return const Center(child: CircularProgressIndicator());
+            }
 
-          if (state is LoaderLoadFailure) {
-            print('LOAD IS FAILED');
-          }
-
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        },
+            return const LoaderContainer();
+          },
+        ),
       ),
     );
   }

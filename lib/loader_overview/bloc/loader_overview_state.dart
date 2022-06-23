@@ -1,85 +1,47 @@
 part of 'loader_overview_bloc.dart';
 
-abstract class LoaderOverviewState extends Equatable {
-  const LoaderOverviewState(this.words, this.selectedWord);
+enum LoaderOverviewStatus { initial, loading, success, failure }
 
+class LoaderOverviewState extends Equatable {
+  const LoaderOverviewState({
+    this.status = LoaderOverviewStatus.initial,
+    this.words = const [],
+    this.selectedWord,
+    this.lastSubmittedPlainWord,
+    this.message,
+  });
+
+  final LoaderOverviewStatus status;
   final List<Word> words;
   final Word? selectedWord;
-}
+  final String? lastSubmittedPlainWord;
+  final String? message;
 
-class LoaderLoadInProgress extends LoaderOverviewState {
-  const LoaderLoadInProgress(List<Word> words, Word? selectedWord)
-      : super(words, selectedWord);
-
-  @override
-  List<Object?> get props => [];
-}
-
-class LoaderLoadSuccess extends LoaderOverviewState {
-  const LoaderLoadSuccess(List<Word> words, Word? selectedWord)
-      : super(words, selectedWord);
-
-  @override
-  List<Object?> get props => [];
-}
-
-class LoaderLoadFailure extends LoaderOverviewState {
-  const LoaderLoadFailure(List<Word> words, this.failure, Word? selectedWord)
-      : super(words, selectedWord);
-
-  final DictionaryFailure failure;
+  LoaderOverviewState copyWith({
+    LoaderOverviewStatus Function()? status,
+    List<Word> Function()? words,
+    Word? Function()? selectedWord,
+    String? Function()? lastSubmittedPlainWord,
+    String? Function()? message,
+  }) {
+    return LoaderOverviewState(
+      status: status != null ? status() : this.status,
+      words: words != null ? words() : this.words,
+      selectedWord: selectedWord != null ? selectedWord() : this.selectedWord,
+      lastSubmittedPlainWord: lastSubmittedPlainWord != null
+          ? lastSubmittedPlainWord()
+          : this.lastSubmittedPlainWord,
+      message:
+          message != null ? message() : this.message,
+    );
+  }
 
   @override
-  List<Object?> get props => [];
-}
-
-class WordSubmitFailure extends LoaderOverviewState {
-  const WordSubmitFailure(List<Word> words, this.failure, Word? selectedWord)
-      : super(words, selectedWord);
-
-  final DictionaryFailure failure;
-
-  @override
-  List<Object?> get props => [];
-}
-
-class WordSubmitNoMeaning extends LoaderOverviewState {
-  const WordSubmitNoMeaning(
-      List<Word> words, this.plainWord, Word? selectedWord)
-      : super(words, selectedWord);
-
-  final String plainWord;
-
-  @override
-  List<Object?> get props => [];
-}
-
-class WordSubmitWithMeaning extends LoaderOverviewState {
-  const WordSubmitWithMeaning(List<Word> words, this.word, Word? selectedWord)
-      : super(words, selectedWord);
-
-  final Word word;
-
-  @override
-  List<Object?> get props => [];
-}
-
-class WordSubmitDuplicate extends LoaderOverviewState {
-  const WordSubmitDuplicate(List<Word> words, this.word, Word? selectedWord)
-      : super(words, selectedWord);
-
-  final Word word;
-
-  @override
-  List<Object?> get props => [];
-}
-
-class SelectedWord extends LoaderOverviewState {
-  const SelectedWord(List<Word> words, this.word, Word? selectedWord)
-      : super(words, selectedWord);
-
-  final Word? word;
-
-  @override
-  List<Object?> get props => [];
+  List<Object?> get props => [
+        status,
+        words,
+        selectedWord,
+        lastSubmittedPlainWord,
+        message,
+      ];
 }
