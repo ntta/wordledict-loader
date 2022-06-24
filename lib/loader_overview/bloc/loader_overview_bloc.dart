@@ -13,6 +13,8 @@ class LoaderOverviewBloc
     on<LoaderOverviewStarted>(_onLoaderOverviewStarted);
     on<LoaderOverviewWordSubmitted>(_onLoaderOverviewWordSubmitted);
     on<LoaderOverviewWordSelected>(_onLoaderOverviewWordSelected);
+    on<LoaderOverviewWordMeaningLabelToggled>(
+        _onLoaderOverviewWordMeaningLabelToggled);
   }
 
   final WordsRepository _wordsRepository;
@@ -64,6 +66,8 @@ class LoaderOverviewBloc
                     words: () => words,
                     message: () => "'${event.plainWord}' has been added",
                     lastSubmittedPlainWord: () => event.plainWord,
+                    selectedWord: () => word,
+                    expandedLabels: () => word.meanings.keys.toList(),
                   ),
                 ),
               );
@@ -85,7 +89,31 @@ class LoaderOverviewBloc
     emit(
       state.copyWith(
         selectedWord: () => event.word,
+        expandedLabels: () => (state.selectedWord?.id != event.word.id)
+            ? event.word.meanings.keys.toList()
+            : state.expandedLabels,
       ),
     );
+  }
+
+  Future<void> _onLoaderOverviewWordMeaningLabelToggled(
+    LoaderOverviewWordMeaningLabelToggled event,
+    Emitter<LoaderOverviewState> emit,
+  ) async {
+    if (state.expandedLabels.contains(event.label)) {
+      emit(
+        state.copyWith(
+          expandedLabels: () => state.expandedLabels
+              .where((label) => label != event.label)
+              .toList(),
+        ),
+      );
+    } else {
+      emit(
+        state.copyWith(
+          expandedLabels: () => [...state.expandedLabels, event.label],
+        ),
+      );
+    }
   }
 }

@@ -32,3 +32,14 @@ class LoaderOverviewWordSubmitted extends LoaderOverviewEvent {
   @override
   List<Object> get props => [plainWord];
 }
+
+class LoaderOverviewWordMeaningLabelToggled extends LoaderOverviewEvent {
+  const LoaderOverviewWordMeaningLabelToggled({
+    required this.label,
+  });
+
+  final String label;
+
+  @override
+  List<Object> get props => [label];
+}

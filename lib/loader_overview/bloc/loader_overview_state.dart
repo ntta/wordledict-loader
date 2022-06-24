@@ -9,6 +9,7 @@ class LoaderOverviewState extends Equatable {
     this.selectedWord,
     this.lastSubmittedPlainWord,
     this.message,
+    this.expandedLabels = const [],
   });
 
   final LoaderOverviewStatus status;
@@ -16,6 +17,7 @@ class LoaderOverviewState extends Equatable {
   final Word? selectedWord;
   final String? lastSubmittedPlainWord;
   final String? message;
+  final List<String> expandedLabels;
 
   LoaderOverviewState copyWith({
     LoaderOverviewStatus Function()? status,
@@ -23,6 +25,7 @@ class LoaderOverviewState extends Equatable {
     Word? Function()? selectedWord,
     String? Function()? lastSubmittedPlainWord,
     String? Function()? message,
+    List<String> Function()? expandedLabels,
   }) {
     return LoaderOverviewState(
       status: status != null ? status() : this.status,
@@ -31,8 +34,9 @@ class LoaderOverviewState extends Equatable {
       lastSubmittedPlainWord: lastSubmittedPlainWord != null
           ? lastSubmittedPlainWord()
           : this.lastSubmittedPlainWord,
-      message:
-          message != null ? message() : this.message,
+      message: message != null ? message() : this.message,
+      expandedLabels:
+          expandedLabels != null ? expandedLabels() : this.expandedLabels,
     );
   }
 
@@ -43,5 +47,6 @@ class LoaderOverviewState extends Equatable {
         selectedWord,
         lastSubmittedPlainWord,
         message,
+        expandedLabels,
       ];
 }

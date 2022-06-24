@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wordledict_loader/loader_overview/presentation/widgets/buttons_bar.dart';
 import 'package:wordledict_loader/loader_overview/presentation/widgets/search_bar.dart';
+import 'package:wordledict_loader/loader_overview/presentation/widgets/word_meanings.dart';
 import 'package:wordledict_loader/loader_overview/presentation/widgets/words_table.dart';
 
 class LoaderContainer extends StatelessWidget {
@@ -23,16 +24,13 @@ class LoaderContainer extends StatelessWidget {
           ),
           Expanded(
             child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: const [
                 Expanded(
                   child: WordsTable(),
                 ),
                 Expanded(
-                  child: Center(
-                    child: Text(
-                      'Select a word from the table to see its meaning',
-                    ),
-                  ),
+                  child: WordMeanings(),
                 ),
               ],
             ),
