@@ -1,4 +1,6 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:wordledict_loader/core/infrastructure/settings/settings_repository.dart';
 import 'package:wordledict_loader/locator.dart';
 
@@ -42,13 +44,26 @@ class _SettingsDialogState extends State<SettingsDialog> {
     return AlertDialog(
       title: const Text('Settings'),
       content: SizedBox(
-        width: 500,
+        width: 800,
         child: Form(
           key: formKey,
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const Text('Dictionary API Key'),
+              RichText(
+                text: TextSpan(
+                  style: const TextStyle(
+                    color: Colors.blue,
+                    fontSize: 16,
+                  ),
+                  text: 'Learner Dictionary API Key',
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = () => launchUrl(
+                          Uri.parse(
+                              'https://dictionaryapi.com/products/api-learners-dictionary'),
+                        ),
+                ),
+              ),
               const SizedBox(width: 20),
               Flexible(
                 child: TextFormField(
