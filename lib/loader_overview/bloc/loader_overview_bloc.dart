@@ -1,5 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
+import 'package:wordledict_loader/core/constants.dart';
 import 'package:wordledict_loader/core/domain/word.dart';
 import 'package:wordledict_loader/core/infrastructure/words/words_repository.dart';
 
@@ -14,7 +16,11 @@ class LoaderOverviewBloc
     on<LoaderOverviewWordSubmitted>(_onLoaderOverviewWordSubmitted);
     on<LoaderOverviewWordSelected>(_onLoaderOverviewWordSelected);
     on<LoaderOverviewWordMeaningLabelToggled>(
-        _onLoaderOverviewWordMeaningLabelToggled);
+      _onLoaderOverviewWordMeaningLabelToggled,
+    );
+    on<LoaderOverviewSearchTermChanged>(
+      _onLoaderOverviewSearchTermChanged,
+    );
   }
 
   final WordsRepository _wordsRepository;
@@ -28,7 +34,10 @@ class LoaderOverviewBloc
     emit(
       state.copyWith(
         status: () => LoaderOverviewStatus.success,
+        allWords: () => words,
         words: () => words,
+        searchTermController: () => TextEditingController(),
+        wordsTableKey: () => GlobalKey<PaginatedDataTableState>(),
       ),
     );
   }
@@ -44,7 +53,6 @@ class LoaderOverviewBloc
         final failureMessage = l.map(api: (_) => 'Error code ${_.errorCode}');
         return emit(
           state.copyWith(
-            status: () => LoaderOverviewStatus.failure,
             message: () => failureMessage,
             lastSubmittedPlainWord: () => event.plainWord,
           ),
@@ -61,23 +69,37 @@ class LoaderOverviewBloc
         ),
         withMeaning: (word) async {
           await _wordsRepository.getWords().then(
-                (words) => emit(
-                  state.copyWith(
-                    words: () => words,
-                    message: () => "'${event.plainWord}' has been added",
-                    lastSubmittedPlainWord: () => event.plainWord,
-                    selectedWord: () => word,
-                    expandedLabels: () => word.meanings.keys.toList(),
-                  ),
+            (words) {
+              state.searchTermController?.clear();
+              final i = words.indexWhere((w) => w.id == word.id);
+              state.wordsTableKey?.currentState?.pageTo(i);
+              emit(
+                state.copyWith(
+                  allWords: () => words,
+                  words: () => words,
+                  message: () => "'${event.plainWord}' has been added",
+                  lastSubmittedPlainWord: () => event.plainWord,
+                  selectedWord: () => word,
+                  expandedLabels: () => word.meanings.keys.toList(),
                 ),
               );
+            },
+          );
         },
-        duplicate: (word) async => emit(
-          state.copyWith(
-            message: () => "'${event.plainWord}' already exists",
-            lastSubmittedPlainWord: () => event.plainWord,
-          ),
-        ),
+        duplicate: (word) {
+          state.searchTermController?.clear();
+          final i = state.words.indexWhere((w) => w.id == word.id);
+          state.wordsTableKey?.currentState?.pageTo(i);
+          emit(
+            state.copyWith(
+              words: () => state.allWords,
+              message: () => "'${event.plainWord}' already exists",
+              lastSubmittedPlainWord: () => event.plainWord,
+              selectedWord: () => word,
+              expandedLabels: () => word.meanings.keys.toList(),
+            ),
+          );
+        },
       );
     }
   }
@@ -115,5 +137,21 @@ class LoaderOverviewBloc
         ),
       );
     }
+  }
+
+  Future<void> _onLoaderOverviewSearchTermChanged(
+    LoaderOverviewSearchTermChanged event,
+    Emitter<LoaderOverviewState> emit,
+  ) async {
+    final searchTerm = state.searchTermController?.text ?? '';
+    state.wordsTableKey?.currentState?.pageTo(0);
+    emit(
+      state.copyWith(
+        words: () => state.allWords
+            .where((word) => word.id.contains(searchTerm))
+            .toList(),
+        selectedWord: () => null,
+      ),
+    );
   }
 }

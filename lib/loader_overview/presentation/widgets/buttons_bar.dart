@@ -13,12 +13,6 @@ class ButtonsBar extends StatelessWidget {
           icon: const Icon(Icons.output),
           onPressed: () {},
         ),
-        const SizedBox(width: 10),
-        IconButton(
-          iconSize: 35,
-          icon: const Icon(Icons.menu_book),
-          onPressed: () {},
-        ),
         Expanded(child: Container()),
         IconButton(
           iconSize: 35,

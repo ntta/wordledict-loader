@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:wordledict_loader/core/constants.dart';
 import 'package:wordledict_loader/loader_overview/bloc/loader_overview_bloc.dart';
 import 'package:wordledict_loader/loader_overview/presentation/widgets/words_data_source.dart';
 
@@ -14,6 +15,7 @@ class WordsTable extends StatelessWidget {
             WordsDataSource(state.words, state.selectedWord);
         return SingleChildScrollView(
           child: PaginatedDataTable(
+            key: state.wordsTableKey,
             sortColumnIndex: 0,
             sortAscending: true,
             showCheckboxColumn: false,
@@ -22,7 +24,7 @@ class WordsTable extends StatelessWidget {
               DataColumn(label: Text('Word')),
               DataColumn(label: Text('Origin')),
             ],
-            rowsPerPage: 15,
+            rowsPerPage: Constants.rowsPerPage,
             source: wordsDataSource,
           ),
         );

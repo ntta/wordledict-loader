@@ -43,3 +43,11 @@ class LoaderOverviewWordMeaningLabelToggled extends LoaderOverviewEvent {
   @override
   List<Object> get props => [label];
 }
+
+
+class LoaderOverviewSearchTermChanged extends LoaderOverviewEvent {
+  const LoaderOverviewSearchTermChanged();
+
+  @override
+  List<Object> get props => [];
+}

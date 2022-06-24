@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
+// TODO: Fix the issue with 'water' aka nested tags
 class TransformedText extends StatelessWidget {
   const TransformedText(this.text, {Key? key}) : super(key: key);
 
