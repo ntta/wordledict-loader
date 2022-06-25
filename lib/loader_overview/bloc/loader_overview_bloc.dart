@@ -21,6 +21,7 @@ class LoaderOverviewBloc
     on<LoaderOverviewSearchTermChanged>(
       _onLoaderOverviewSearchTermChanged,
     );
+    on<LoaderOverviewSearchTermCleared>(_onLoaderOverviewSearchTermCleared);
   }
 
   final WordsRepository _wordsRepository;
@@ -150,6 +151,20 @@ class LoaderOverviewBloc
         words: () => state.allWords
             .where((word) => word.id.contains(searchTerm))
             .toList(),
+        selectedWord: () => null,
+      ),
+    );
+  }
+
+  Future<void> _onLoaderOverviewSearchTermCleared(
+    LoaderOverviewSearchTermCleared event,
+    Emitter<LoaderOverviewState> emit,
+  ) async {
+    state.searchTermController?.clear();
+    state.wordsTableKey?.currentState?.pageTo(0);
+    emit(
+      state.copyWith(
+        words: () => state.allWords,
         selectedWord: () => null,
       ),
     );

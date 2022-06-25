@@ -19,7 +19,8 @@ class SearchBar extends StatelessWidget {
             prefixIcon: const Icon(Icons.search),
             suffixIcon: IconButton(
               icon: const Icon(Icons.clear),
-              onPressed: () {},
+              onPressed: () => locator<LoaderOverviewBloc>()
+                  .add(const LoaderOverviewSearchTermCleared()),
             ),
           ),
         );
