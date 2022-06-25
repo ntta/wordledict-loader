@@ -2,7 +2,6 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
-// TODO: Fix the issue with 'water' aka nested tags
 class TransformedText extends StatelessWidget {
   const TransformedText(this.text, {Key? key}) : super(key: key);
 
@@ -16,27 +15,25 @@ class TransformedText extends StatelessWidget {
         .replaceAll('{rdquo}', '\u201d');
 
     final List<String> chunks = [];
-
     String processingText = firstStepText;
-    int startCloseIndex = processingText.indexOf('{/');
+    int startOpenIndex = processingText.indexOf('{');
 
-    while (startCloseIndex >= 0) {
-      int endCloseIndex = startCloseIndex + 1;
-      while (processingText[endCloseIndex] != '}') {
-        endCloseIndex++;
-      }
-      final tagName =
-          processingText.substring(startCloseIndex + 2, endCloseIndex);
-      final startOpenIndex = processingText.indexOf('{$tagName}');
+    while (startOpenIndex >= 0) {
       final frontText = processingText.substring(0, startOpenIndex);
       if (frontText != '') {
         chunks.add(frontText);
       }
+      final endOpenIndex = processingText.indexOf('}');
+      final tagName =
+          processingText.substring(startOpenIndex + 1, endOpenIndex);
+      final startCloseIndex = processingText.indexOf('{/$tagName}');
+      final endCloseIndex = startCloseIndex + tagName.length + 2;
       final tagText =
           processingText.substring(startOpenIndex, endCloseIndex + 1);
       chunks.add(tagText);
+
       processingText = processingText.substring(endCloseIndex + 1);
-      startCloseIndex = processingText.indexOf('{/');
+      startOpenIndex = processingText.indexOf('{');
     }
 
     if (processingText != '') {
@@ -48,59 +45,30 @@ class TransformedText extends StatelessWidget {
         style: DefaultTextStyle.of(context).style,
         children: chunks.map(
           (chunk) {
-            if (chunk.startsWith('{b}')) {
-              final text = getTextInTag(chunk, 'b');
-              return TextSpan(
-                text: text,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                ),
-              );
-            }
+            String textOnly = getTextOnly(chunk);
+            if (hasTag(chunk)) {
+              final List<FontFeature> fontFeatures = [];
+              if (hasSubTag(chunk)) {
+                textOnly = textOnly.toLowerCase();
+                fontFeatures.add(const FontFeature.subscripts());
+              }
+              if (hasSupTag(chunk)) {
+                textOnly = textOnly.toLowerCase();
+                fontFeatures.add(const FontFeature.superscripts());
+              }
+              if (hasSmallCapTag(chunk)) {
+                textOnly = textOnly.toUpperCase();
+                fontFeatures.add(const FontFeature.enable('smcp'));
+              }
 
-            if (chunk.startsWith('{inf}')) {
-              final text = getTextInTag(chunk, 'inf').toLowerCase();
               return TextSpan(
-                text: text,
-                style: const TextStyle(
-                  fontFeatures: [
-                    FontFeature.subscripts(),
-                  ],
-                ),
-              );
-            }
-
-            if (chunk.startsWith('{it}')) {
-              final text = getTextInTag(chunk, 'it');
-              return TextSpan(
-                text: text,
-                style: const TextStyle(
-                  fontStyle: FontStyle.italic,
-                ),
-              );
-            }
-
-            if (chunk.startsWith('{sc}')) {
-              final text = getTextInTag(chunk, 'sc');
-              return TextSpan(
-                text: text,
-                style: const TextStyle(
-                  fontFeatures: [
-                    FontFeature.enable('smcp'),
-                  ],
-                  letterSpacing: 0.5,
-                ),
-              );
-            }
-
-            if (chunk.startsWith('{sup}')) {
-              final text = getTextInTag(chunk, 'sup').toLowerCase();
-              return TextSpan(
-                text: text,
-                style: const TextStyle(
-                  fontFeatures: [
-                    FontFeature.superscripts(),
-                  ],
+                text: textOnly,
+                style: TextStyle(
+                  fontWeight: hasBoldTag(chunk) ? FontWeight.bold : null,
+                  fontStyle: hasItalicTag(chunk) ? FontStyle.italic : null,
+                  fontFeatures: fontFeatures,
+                  letterSpacing: hasSmallCapTag(chunk) ? 0.5 : null,
+                  fontSize: hasSmallCapTag(chunk) ? 10 : null,
                 ),
               );
             }
@@ -112,7 +80,28 @@ class TransformedText extends StatelessWidget {
     );
   }
 
-  String getTextInTag(String textWithTag, String tag) {
-    return textWithTag.replaceAll('{$tag}', '').replaceAll('{/$tag}', '');
+  String getTextOnly(String textWithTags) {
+    return textWithTags
+        .replaceAll('{b}', '')
+        .replaceAll('{/b}', '')
+        .replaceAll('{inf}', '')
+        .replaceAll('{/inf}', '')
+        .replaceAll('{it}', '')
+        .replaceAll('{/it}', '')
+        .replaceAll('{sc}', '')
+        .replaceAll('{/sc}', '')
+        .replaceAll('{sup}', '')
+        .replaceAll('{/sup}', '');
   }
+
+  bool hasTag(String text) {
+    return ['{b}', '{inf}', '{it}', '{sc}', '{sup}']
+        .any((tag) => text.contains(tag));
+  }
+
+  bool hasBoldTag(String text) => text.contains('{b}');
+  bool hasSubTag(String text) => text.contains('{inf}');
+  bool hasItalicTag(String text) => text.contains('{it}');
+  bool hasSmallCapTag(String text) => text.contains('{sc}');
+  bool hasSupTag(String text) => text.contains('{sup}');
 }
