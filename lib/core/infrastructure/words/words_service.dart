@@ -35,6 +35,9 @@ class WordsService {
     return WordResponse.duplicate(WordDto.fromJson(existingWord));
   }
 
+  Future<void> deleteWord(String id) =>
+      _store.record(id).delete(_sembastDatabase.instance);
+
   Future<List<WordDto>> getWords() => _store
       .find(
         _sembastDatabase.instance,
@@ -71,6 +74,9 @@ class WordsService {
         }
         final originAndIndex = (element['meta']['id'] as String).split(':');
         if (origin == null) {
+          if (originAndIndex[0].contains(' ')) {
+            continue;
+          }
           origin = originAndIndex[0];
         } else {
           if (originAndIndex[0] != origin) {

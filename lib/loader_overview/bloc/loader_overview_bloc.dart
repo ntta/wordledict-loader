@@ -1,7 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:wordledict_loader/core/constants.dart';
 import 'package:wordledict_loader/core/domain/word.dart';
 import 'package:wordledict_loader/core/infrastructure/words/words_repository.dart';
 
@@ -22,6 +21,7 @@ class LoaderOverviewBloc
       _onLoaderOverviewSearchTermChanged,
     );
     on<LoaderOverviewSearchTermCleared>(_onLoaderOverviewSearchTermCleared);
+    on<LoaderOverviewWordDeleted>(_onLoaderOverviewWordDeleted);
   }
 
   final WordsRepository _wordsRepository;
@@ -165,6 +165,22 @@ class LoaderOverviewBloc
     emit(
       state.copyWith(
         words: () => state.allWords,
+        selectedWord: () => null,
+      ),
+    );
+  }
+
+  Future<void> _onLoaderOverviewWordDeleted(
+    LoaderOverviewWordDeleted event,
+    Emitter<LoaderOverviewState> emit,
+  ) async {
+    await _wordsRepository.deleteWord(event.id);
+    final allWords = state.allWords.where((w) => w.id != event.id).toList();
+    final words = state.words.where((w) => w.id != event.id).toList();
+    emit(
+      state.copyWith(
+        allWords: () => allWords,
+        words: () => words,
         selectedWord: () => null,
       ),
     );

@@ -31,4 +31,6 @@ class WordsRepository {
       return left(DictionaryFailure.api(e.errorCode));
     }
   }
+
+  Future<void> deleteWord(String id) => _wordsService.deleteWord(id);
 }

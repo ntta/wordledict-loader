@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wordledict_loader/core/presentation/widgets/transformed_text.dart';
 import 'package:wordledict_loader/loader_overview/bloc/loader_overview_bloc.dart';
+import 'package:wordledict_loader/loader_overview/presentation/widgets/delete_confirm_dialog.dart';
 import 'package:wordledict_loader/locator.dart';
 
 class WordMeanings extends StatelessWidget {
@@ -23,12 +24,28 @@ class WordMeanings extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  state.selectedWord!.id,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 40,
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      state.selectedWord!.id,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 40,
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return DeleteConfirmDialog(state.selectedWord!.id);
+                          },
+                        );
+                      },
+                      icon: const Icon(Icons.delete),
+                    ),
+                  ],
                 ),
                 Text(
                   state.selectedWord!.origin,

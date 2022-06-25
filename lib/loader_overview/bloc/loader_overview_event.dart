@@ -58,3 +58,12 @@ class LoaderOverviewSearchTermCleared extends LoaderOverviewEvent {
   @override
   List<Object> get props => [];
 }
+
+class LoaderOverviewWordDeleted extends LoaderOverviewEvent {
+  const LoaderOverviewWordDeleted(this.id);
+
+  final String id;
+
+  @override
+  List<Object> get props => [id];
+}

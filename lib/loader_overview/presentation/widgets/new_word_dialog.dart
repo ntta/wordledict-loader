@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:wordledict_loader/loader_overview/bloc/loader_overview_bloc.dart';
 import 'package:wordledict_loader/locator.dart';
 
@@ -16,13 +17,12 @@ class NewWordDialog extends StatelessWidget {
         key: formKey,
         child: TextFormField(
           maxLength: 5,
+          inputFormatters: [
+            FilteringTextInputFormatter.allow(RegExp(r"(^[A-Za-z]+$)"))
+          ],
           validator: (value) {
             if (value == null || value.isEmpty || value.length != 5) {
               return 'A wordle must have 5 letters';
-            }
-
-            if (!RegExp(r"(^[A-Za-z]+$)").hasMatch(value)) {
-              return 'Only letters are allowed';
             }
             return null;
           },
