@@ -23,7 +23,7 @@ class WordsService {
 
       if (wordDto == null) {
         // Do not save word that has no meaning
-        return const WordResponse.noMeaning();
+        return WordResponse.noMeaning(plainWord);
       }
 
       await _store
@@ -104,8 +104,13 @@ class WordsService {
       } else if (e.response != null) {
         throw RestApiException(e.response?.statusCode);
       } else {
-        rethrow;
+        // TODO: proper error catching
+        print(e.toString());
+        throw RestApiException(500);
       }
+    } catch (e) {
+      print(e.toString());
+      throw RestApiException(500);
     }
   }
 }

@@ -44,7 +44,6 @@ class LoaderOverviewWordMeaningLabelToggled extends LoaderOverviewEvent {
   List<Object> get props => [label];
 }
 
-
 class LoaderOverviewSearchTermChanged extends LoaderOverviewEvent {
   const LoaderOverviewSearchTermChanged();
 
@@ -66,4 +65,20 @@ class LoaderOverviewWordDeleted extends LoaderOverviewEvent {
 
   @override
   List<Object> get props => [id];
+}
+
+class LoaderOverviewFilePicked extends LoaderOverviewEvent {
+  const LoaderOverviewFilePicked(this.file);
+
+  final File file;
+
+  @override
+  List<Object> get props => [file];
+}
+
+class LoaderOverviewFileProcessingCleared extends LoaderOverviewEvent {
+  const LoaderOverviewFileProcessingCleared();
+
+  @override
+  List<Object> get props => [];
 }

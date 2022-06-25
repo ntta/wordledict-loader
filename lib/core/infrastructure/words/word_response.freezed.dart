@@ -18,21 +18,21 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$WordResponse<T> {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function() noMeaning,
+    required TResult Function(String data) noMeaning,
     required TResult Function(T data) withMeaning,
     required TResult Function(T data) duplicate,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function()? noMeaning,
+    TResult Function(String data)? noMeaning,
     TResult Function(T data)? withMeaning,
     TResult Function(T data)? duplicate,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? noMeaning,
+    TResult Function(String data)? noMeaning,
     TResult Function(T data)? withMeaning,
     TResult Function(T data)? duplicate,
     required TResult orElse(),
@@ -84,6 +84,7 @@ abstract class _$$_NoMeaningCopyWith<T, $Res> {
   factory _$$_NoMeaningCopyWith(
           _$_NoMeaning<T> value, $Res Function(_$_NoMeaning<T>) then) =
       __$$_NoMeaningCopyWithImpl<T, $Res>;
+  $Res call({String data});
 }
 
 /// @nodoc
@@ -96,57 +97,80 @@ class __$$_NoMeaningCopyWithImpl<T, $Res>
 
   @override
   _$_NoMeaning<T> get _value => super._value as _$_NoMeaning<T>;
+
+  @override
+  $Res call({
+    Object? data = freezed,
+  }) {
+    return _then(_$_NoMeaning<T>(
+      data == freezed
+          ? _value.data
+          : data // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
 }
 
 /// @nodoc
 
 class _$_NoMeaning<T> extends _NoMeaning<T> {
-  const _$_NoMeaning() : super._();
+  const _$_NoMeaning(this.data) : super._();
+
+  @override
+  final String data;
 
   @override
   String toString() {
-    return 'WordResponse<$T>.noMeaning()';
+    return 'WordResponse<$T>.noMeaning(data: $data)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$_NoMeaning<T>);
+        (other.runtimeType == runtimeType &&
+            other is _$_NoMeaning<T> &&
+            const DeepCollectionEquality().equals(other.data, data));
   }
 
   @override
-  int get hashCode => runtimeType.hashCode;
+  int get hashCode =>
+      Object.hash(runtimeType, const DeepCollectionEquality().hash(data));
+
+  @JsonKey(ignore: true)
+  @override
+  _$$_NoMeaningCopyWith<T, _$_NoMeaning<T>> get copyWith =>
+      __$$_NoMeaningCopyWithImpl<T, _$_NoMeaning<T>>(this, _$identity);
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function() noMeaning,
+    required TResult Function(String data) noMeaning,
     required TResult Function(T data) withMeaning,
     required TResult Function(T data) duplicate,
   }) {
-    return noMeaning();
+    return noMeaning(data);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function()? noMeaning,
+    TResult Function(String data)? noMeaning,
     TResult Function(T data)? withMeaning,
     TResult Function(T data)? duplicate,
   }) {
-    return noMeaning?.call();
+    return noMeaning?.call(data);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? noMeaning,
+    TResult Function(String data)? noMeaning,
     TResult Function(T data)? withMeaning,
     TResult Function(T data)? duplicate,
     required TResult orElse(),
   }) {
     if (noMeaning != null) {
-      return noMeaning();
+      return noMeaning(data);
     }
     return orElse();
   }
@@ -187,8 +211,13 @@ class _$_NoMeaning<T> extends _NoMeaning<T> {
 }
 
 abstract class _NoMeaning<T> extends WordResponse<T> {
-  const factory _NoMeaning() = _$_NoMeaning<T>;
+  const factory _NoMeaning(final String data) = _$_NoMeaning<T>;
   const _NoMeaning._() : super._();
+
+  String get data => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  _$$_NoMeaningCopyWith<T, _$_NoMeaning<T>> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -256,7 +285,7 @@ class _$_WithMeaning<T> extends _WithMeaning<T> {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function() noMeaning,
+    required TResult Function(String data) noMeaning,
     required TResult Function(T data) withMeaning,
     required TResult Function(T data) duplicate,
   }) {
@@ -266,7 +295,7 @@ class _$_WithMeaning<T> extends _WithMeaning<T> {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function()? noMeaning,
+    TResult Function(String data)? noMeaning,
     TResult Function(T data)? withMeaning,
     TResult Function(T data)? duplicate,
   }) {
@@ -276,7 +305,7 @@ class _$_WithMeaning<T> extends _WithMeaning<T> {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? noMeaning,
+    TResult Function(String data)? noMeaning,
     TResult Function(T data)? withMeaning,
     TResult Function(T data)? duplicate,
     required TResult orElse(),
@@ -397,7 +426,7 @@ class _$_Duplicate<T> extends _Duplicate<T> {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function() noMeaning,
+    required TResult Function(String data) noMeaning,
     required TResult Function(T data) withMeaning,
     required TResult Function(T data) duplicate,
   }) {
@@ -407,7 +436,7 @@ class _$_Duplicate<T> extends _Duplicate<T> {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult Function()? noMeaning,
+    TResult Function(String data)? noMeaning,
     TResult Function(T data)? withMeaning,
     TResult Function(T data)? duplicate,
   }) {
@@ -417,7 +446,7 @@ class _$_Duplicate<T> extends _Duplicate<T> {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? noMeaning,
+    TResult Function(String data)? noMeaning,
     TResult Function(T data)? withMeaning,
     TResult Function(T data)? duplicate,
     required TResult orElse(),

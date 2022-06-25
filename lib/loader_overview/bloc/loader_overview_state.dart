@@ -13,6 +13,8 @@ class LoaderOverviewState extends Equatable {
     this.expandedLabels = const [],
     this.searchTermController,
     this.wordsTableKey,
+    this.processingFile,
+    this.fileProcessingMessages = const [],
   });
 
   final LoaderOverviewStatus status;
@@ -24,6 +26,8 @@ class LoaderOverviewState extends Equatable {
   final List<String> expandedLabels;
   final TextEditingController? searchTermController;
   final GlobalKey<PaginatedDataTableState>? wordsTableKey;
+  final File? processingFile;
+  final List<String> fileProcessingMessages;
 
   LoaderOverviewState copyWith({
     LoaderOverviewStatus Function()? status,
@@ -34,7 +38,9 @@ class LoaderOverviewState extends Equatable {
     String? Function()? message,
     List<String> Function()? expandedLabels,
     TextEditingController Function()? searchTermController,
-    GlobalKey<PaginatedDataTableState> Function()? wordsTableKey,
+    GlobalKey<PaginatedDataTableState>? Function()? wordsTableKey,
+    File? Function()? processingFile,
+    List<String> Function()? fileProcessingMessages,
   }) {
     return LoaderOverviewState(
       status: status != null ? status() : this.status,
@@ -52,6 +58,11 @@ class LoaderOverviewState extends Equatable {
           : this.searchTermController,
       wordsTableKey:
           wordsTableKey != null ? wordsTableKey() : this.wordsTableKey,
+      processingFile:
+          processingFile != null ? processingFile() : this.processingFile,
+      fileProcessingMessages: fileProcessingMessages != null
+          ? fileProcessingMessages()
+          : this.fileProcessingMessages,
     );
   }
 
@@ -65,5 +76,7 @@ class LoaderOverviewState extends Equatable {
         expandedLabels,
         searchTermController,
         wordsTableKey,
+        processingFile,
+        fileProcessingMessages,
       ];
 }

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +24,9 @@ class LoaderOverviewBloc
     );
     on<LoaderOverviewSearchTermCleared>(_onLoaderOverviewSearchTermCleared);
     on<LoaderOverviewWordDeleted>(_onLoaderOverviewWordDeleted);
+    on<LoaderOverviewFilePicked>(_onLoaderOverviewFilePicked);
+    on<LoaderOverviewFileProcessingCleared>(
+        _onLoaderOverviewFileProcessingCleared);
   }
 
   final WordsRepository _wordsRepository;
@@ -62,9 +67,9 @@ class LoaderOverviewBloc
     } else {
       final wordResponse = response.getOrElse(() => throw UnimplementedError());
       await wordResponse.when(
-        noMeaning: () async => emit(
+        noMeaning: (plainWord) async => emit(
           state.copyWith(
-            message: () => "'${event.plainWord}' has no meaning",
+            message: () => "'$plainWord' has no meaning",
             lastSubmittedPlainWord: () => event.plainWord,
           ),
         ),
@@ -182,6 +187,59 @@ class LoaderOverviewBloc
         allWords: () => allWords,
         words: () => words,
         selectedWord: () => null,
+      ),
+    );
+  }
+
+  Future<void> _onLoaderOverviewFilePicked(
+    LoaderOverviewFilePicked event,
+    Emitter<LoaderOverviewState> emit,
+  ) async {
+    emit(
+      state.copyWith(
+        processingFile: () => event.file,
+        fileProcessingMessages: () => [],
+      ),
+    );
+    final plainWords = event.file
+        .readAsLinesSync()
+        .where((line) => line.trim() != '')
+        .toList();
+    final wordResponses = await _wordsRepository.insertPlainWords(plainWords);
+    final List<String> messages = [];
+    for (var wordResponse in wordResponses) {
+      wordResponse.fold(
+        (l) => messages.add(l.map(api: (_) => 'Error code ${_.errorCode}')),
+        (r) {
+          r.when(
+            noMeaning: (plainWord) =>
+                messages.add("'$plainWord' has no meaning"),
+            withMeaning: (word) => messages.add("'${word.id}' has been added"),
+            duplicate: (word) => messages.add("'${word.id}' already exists"),
+          );
+        },
+      );
+    }
+    final allWords = await _wordsRepository.getWords();
+    state.wordsTableKey?.currentState?.pageTo(0);
+    state.searchTermController?.clear();
+    emit(
+      state.copyWith(
+        allWords: () => allWords,
+        words: () => allWords,
+        selectedWord: () => null,
+      ),
+    );
+  }
+
+  Future<void> _onLoaderOverviewFileProcessingCleared(
+    LoaderOverviewFileProcessingCleared event,
+    Emitter<LoaderOverviewState> emit,
+  ) async {
+    emit(
+      state.copyWith(
+        fileProcessingMessages: () => [],
+        processingFile: () => null,
       ),
     );
   }
