@@ -231,10 +231,13 @@ class LoaderOverviewBloc
             },
           ),
         );
-        return state.copyWith(
-          fileProcessingMessages: () =>
-              [message, ...state.fileProcessingMessages],
-        );
+        return state.copyWith(fileProcessingMessages: () {
+          final newList = [message, ...state.fileProcessingMessages];
+          if (state.fileProcessingMessages.length > 1000) {
+            return newList.sublist(0, 1000);
+          }
+          return newList;
+        });
       },
     );
 
