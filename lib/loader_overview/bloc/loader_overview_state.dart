@@ -4,6 +4,8 @@ enum LoaderOverviewStatus { initial, loading, success, failure }
 
 enum LoaderOverviewFileProcessingStatus { initial, processing, processed }
 
+enum LoaderOverviewFileExportingStatus { initial, exporting, exported, failed }
+
 class LoaderOverviewState extends Equatable {
   const LoaderOverviewState({
     this.status = LoaderOverviewStatus.initial,
@@ -18,6 +20,8 @@ class LoaderOverviewState extends Equatable {
     this.processingFile,
     this.fileProcessingMessages = const [],
     this.fileProcessingStatus = LoaderOverviewFileProcessingStatus.initial,
+    this.fileExportingStatus = LoaderOverviewFileExportingStatus.initial,
+    this.exportingMessage,
   });
 
   final LoaderOverviewStatus status;
@@ -32,6 +36,8 @@ class LoaderOverviewState extends Equatable {
   final File? processingFile;
   final List<String> fileProcessingMessages;
   final LoaderOverviewFileProcessingStatus fileProcessingStatus;
+  final String? exportingMessage;
+  final LoaderOverviewFileExportingStatus fileExportingStatus;
 
   LoaderOverviewState copyWith({
     LoaderOverviewStatus Function()? status,
@@ -46,6 +52,8 @@ class LoaderOverviewState extends Equatable {
     File? Function()? processingFile,
     List<String> Function()? fileProcessingMessages,
     LoaderOverviewFileProcessingStatus Function()? fileProcessingStatus,
+    LoaderOverviewFileExportingStatus Function()? fileExportingStatus,
+    String? Function()? exportingMessage,
   }) {
     return LoaderOverviewState(
       status: status != null ? status() : this.status,
@@ -71,6 +79,12 @@ class LoaderOverviewState extends Equatable {
       fileProcessingStatus: fileProcessingStatus != null
           ? fileProcessingStatus()
           : this.fileProcessingStatus,
+      fileExportingStatus: fileExportingStatus != null
+          ? fileExportingStatus()
+          : this.fileExportingStatus,
+      exportingMessage: exportingMessage != null
+          ? exportingMessage()
+          : this.exportingMessage,
     );
   }
 
@@ -87,5 +101,7 @@ class LoaderOverviewState extends Equatable {
         processingFile,
         fileProcessingMessages,
         fileProcessingStatus,
+        fileExportingStatus,
+        exportingMessage,
       ];
 }

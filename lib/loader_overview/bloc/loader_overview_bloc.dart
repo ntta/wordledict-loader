@@ -30,6 +30,10 @@ class LoaderOverviewBloc
     on<LoaderOverviewFilePicked>(_onLoaderOverviewFilePicked);
     on<LoaderOverviewFileProcessingCleared>(
         _onLoaderOverviewFileProcessingCleared);
+    on<LoaderOverviewFileExportingStarted>(
+        _onLoaderOverviewFileExportingStarted);
+    on<LoaderOverviewFileExportingCleared>(
+        _onLoaderOverviewFileExportingCleared);
   }
 
   final WordsRepository _wordsRepository;
@@ -257,6 +261,52 @@ class LoaderOverviewBloc
         fileProcessingMessages: () => [],
         processingFile: () => null,
         fileProcessingStatus: () => LoaderOverviewFileProcessingStatus.initial,
+      ),
+    );
+  }
+
+  Future<void> _onLoaderOverviewFileExportingStarted(
+    LoaderOverviewFileExportingStarted event,
+    Emitter<LoaderOverviewState> emit,
+  ) async {
+    emit(
+      state.copyWith(
+          fileExportingStatus: () =>
+              LoaderOverviewFileExportingStatus.exporting,
+          exportingMessage: () => 'Exporting file...'),
+    );
+
+    var isSuccess = false;
+    String? errorMessage;
+
+    try {
+      final json = await _wordsRepository.exportWordsToJson();
+      final file = File(event.exportingFilePath);
+      await file.writeAsString(json);
+      isSuccess = true;
+    } catch (error) {
+      errorMessage = error.toString();
+    }
+
+    emit(
+      state.copyWith(
+        fileExportingStatus: () => isSuccess
+            ? LoaderOverviewFileExportingStatus.exported
+            : LoaderOverviewFileExportingStatus.failed,
+        exportingMessage: () =>
+            isSuccess ? 'Done!' : 'Something went wrong\n$errorMessage',
+      ),
+    );
+  }
+
+  Future<void> _onLoaderOverviewFileExportingCleared(
+    LoaderOverviewFileExportingCleared event,
+    Emitter<LoaderOverviewState> emit,
+  ) async {
+    emit(
+      state.copyWith(
+        fileExportingStatus: () => LoaderOverviewFileExportingStatus.initial,
+        exportingMessage: () => null,
       ),
     );
   }

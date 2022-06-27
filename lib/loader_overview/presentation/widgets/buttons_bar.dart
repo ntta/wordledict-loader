@@ -4,6 +4,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:wordledict_loader/loader_overview/bloc/loader_overview_bloc.dart';
 import 'package:wordledict_loader/loader_overview/presentation/widgets/bulk_add_dialog.dart';
+import 'package:wordledict_loader/loader_overview/presentation/widgets/export_file_dialog.dart';
 import 'package:wordledict_loader/loader_overview/presentation/widgets/new_word_dialog.dart';
 import 'package:wordledict_loader/locator.dart';
 
@@ -17,7 +18,26 @@ class ButtonsBar extends StatelessWidget {
         IconButton(
           iconSize: 35,
           icon: const Icon(Icons.output),
-          onPressed: () {},
+          onPressed: () async {
+            String? outputFile = await FilePicker.platform.saveFile(
+              dialogTitle: 'Please select an output file:',
+              fileName: 'words.json',
+              allowedExtensions: ['json'],
+              type: FileType.custom,
+            );
+
+            if (outputFile != null) {
+              showDialog(
+                barrierDismissible: false,
+                context: context,
+                builder: (context) {
+                  return const ExportFileDialog();
+                },
+              );
+              locator<LoaderOverviewBloc>()
+                  .add(LoaderOverviewFileExportingStarted(outputFile));
+            }
+          },
         ),
         Expanded(child: Container()),
         IconButton(
@@ -30,7 +50,6 @@ class ButtonsBar extends StatelessWidget {
             );
 
             if (result != null) {
-              // TODO: use file stream instead
               File file = File(result.files.single.path!);
               showDialog(
                 barrierDismissible: false,

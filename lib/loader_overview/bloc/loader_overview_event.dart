@@ -82,3 +82,19 @@ class LoaderOverviewFileProcessingCleared extends LoaderOverviewEvent {
   @override
   List<Object> get props => [];
 }
+
+class LoaderOverviewFileExportingStarted extends LoaderOverviewEvent {
+  const LoaderOverviewFileExportingStarted(this.exportingFilePath);
+
+  final String exportingFilePath;
+
+  @override
+  List<Object> get props => [exportingFilePath];
+}
+
+class LoaderOverviewFileExportingCleared extends LoaderOverviewEvent {
+  const LoaderOverviewFileExportingCleared();
+
+  @override
+  List<Object> get props => [];
+}

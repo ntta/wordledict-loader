@@ -44,4 +44,6 @@ class WordsRepository {
   }
 
   Future<void> deleteWord(String id) => _wordsService.deleteWord(id);
+
+  Future<String> exportWordsToJson() => _wordsService.exportWordsToJson();
 }

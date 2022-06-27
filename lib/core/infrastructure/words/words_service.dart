@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:sembast/sembast.dart';
+import 'package:sembast/utils/sembast_import_export.dart';
 import 'package:wordledict_loader/core/infrastructure/database/sembast_database.dart';
 import 'package:wordledict_loader/core/infrastructure/network/dio_extensions.dart';
 import 'package:wordledict_loader/core/infrastructure/network/rest_api_exception.dart';
@@ -119,5 +122,11 @@ class WordsService {
       print('$plainWord ${e.toString()}');
       throw RestApiException(500);
     }
+  }
+
+  Future<String> exportWordsToJson() async {
+    var content =
+        await exportDatabase(_sembastDatabase.instance, storeNames: ['words']);
+    return jsonEncode(content);
   }
 }
