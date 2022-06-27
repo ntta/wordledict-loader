@@ -9,48 +9,55 @@ class BulkAddDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<LoaderOverviewBloc, LoaderOverviewState>(
+      buildWhen: (previous, current) =>
+          previous.fileProcessingMessages.length !=
+              current.fileProcessingMessages.length ||
+          previous.fileProcessingStatus != current.fileProcessingStatus,
       builder: (context, state) {
         return AlertDialog(
-          title: const Text('Adding Words'),
+          title: RichText(
+            text: TextSpan(
+              style: DefaultTextStyle.of(context).style.copyWith(fontSize: 20),
+              text: 'Adding words from file ',
+              children: [
+                TextSpan(
+                  text: state.processingFile?.path.split('/').last,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ),
           content: SizedBox(
             width: 800,
             height: 800,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                RichText(
-                  text: TextSpan(
-                    style: DefaultTextStyle.of(context).style,
-                    text: 'Adding words from file ',
-                    children: [
-                      TextSpan(
-                        text: state.processingFile?.path.split('/').last,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (state.fileProcessingStatus ==
+                      LoaderOverviewFileProcessingStatus.processing)
+                    const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Center(
+                        child: CircularProgressIndicator(),
                       ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 100),
-                if (state.fileProcessingMessages.isEmpty)
-                  const CircularProgressIndicator(),
-                if (state.fileProcessingMessages.isNotEmpty)
-                  SingleChildScrollView(
-                    child: Column(
-                      children: state.fileProcessingMessages
-                          .map(
-                            (e) => Text(e),
-                          )
-                          .toList(),
                     ),
-                  ),
-              ],
+                  ...state.fileProcessingMessages
+                      .map(
+                        (e) => Text('\u2022 $e'),
+                      )
+                      .toList()
+                ],
+              ),
             ),
           ),
           actions: [
             TextButton(
-              onPressed: state.fileProcessingMessages.isEmpty
+              onPressed: state.fileProcessingStatus ==
+                      LoaderOverviewFileProcessingStatus.processing
                   ? null
                   : () {
                       locator<LoaderOverviewBloc>()

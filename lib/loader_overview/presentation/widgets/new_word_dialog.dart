@@ -31,23 +31,26 @@ class NewWordDialog extends StatelessWidget {
           decoration: const InputDecoration(
             hintText: 'Enter new word',
           ),
+          onFieldSubmitted: (_) => submitNewWord(context),
         ),
       ),
       actions: [
         TextButton(
-          onPressed: () {
-            if (formKey.currentState!.validate()) {
-              locator<LoaderOverviewBloc>().add(
-                LoaderOverviewWordSubmitted(
-                  plainWord: newWordInputController.text.toLowerCase(),
-                ),
-              );
-              Navigator.of(context).pop();
-            }
-          },
+          onPressed: () => submitNewWord(context),
           child: const Text('SUBMIT'),
         ),
       ],
     );
+  }
+
+  void submitNewWord(BuildContext context) {
+    if (formKey.currentState!.validate()) {
+      locator<LoaderOverviewBloc>().add(
+        LoaderOverviewWordSubmitted(
+          plainWord: newWordInputController.text.toLowerCase(),
+        ),
+      );
+      Navigator.of(context).pop();
+    }
   }
 }

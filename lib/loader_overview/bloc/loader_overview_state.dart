@@ -2,6 +2,8 @@ part of 'loader_overview_bloc.dart';
 
 enum LoaderOverviewStatus { initial, loading, success, failure }
 
+enum LoaderOverviewFileProcessingStatus { initial, processing, processed }
+
 class LoaderOverviewState extends Equatable {
   const LoaderOverviewState({
     this.status = LoaderOverviewStatus.initial,
@@ -15,6 +17,7 @@ class LoaderOverviewState extends Equatable {
     this.wordsTableKey,
     this.processingFile,
     this.fileProcessingMessages = const [],
+    this.fileProcessingStatus = LoaderOverviewFileProcessingStatus.initial,
   });
 
   final LoaderOverviewStatus status;
@@ -28,6 +31,7 @@ class LoaderOverviewState extends Equatable {
   final GlobalKey<PaginatedDataTableState>? wordsTableKey;
   final File? processingFile;
   final List<String> fileProcessingMessages;
+  final LoaderOverviewFileProcessingStatus fileProcessingStatus;
 
   LoaderOverviewState copyWith({
     LoaderOverviewStatus Function()? status,
@@ -41,6 +45,7 @@ class LoaderOverviewState extends Equatable {
     GlobalKey<PaginatedDataTableState>? Function()? wordsTableKey,
     File? Function()? processingFile,
     List<String> Function()? fileProcessingMessages,
+    LoaderOverviewFileProcessingStatus Function()? fileProcessingStatus,
   }) {
     return LoaderOverviewState(
       status: status != null ? status() : this.status,
@@ -63,6 +68,9 @@ class LoaderOverviewState extends Equatable {
       fileProcessingMessages: fileProcessingMessages != null
           ? fileProcessingMessages()
           : this.fileProcessingMessages,
+      fileProcessingStatus: fileProcessingStatus != null
+          ? fileProcessingStatus()
+          : this.fileProcessingStatus,
     );
   }
 
@@ -78,5 +86,6 @@ class LoaderOverviewState extends Equatable {
         wordsTableKey,
         processingFile,
         fileProcessingMessages,
+        fileProcessingStatus,
       ];
 }

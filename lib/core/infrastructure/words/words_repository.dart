@@ -34,16 +34,13 @@ class WordsRepository {
     }
   }
 
-  Future<List<Either<DictionaryFailure, WordResponse<Word>>>> insertPlainWords(
+  Stream<Either<DictionaryFailure, WordResponse<Word>>> insertPlainWords(
     List<String> plainWords,
-  ) async {
-    // TODO: convert this to stream
-    final List<Either<DictionaryFailure, WordResponse<Word>>> responses = [];
+  ) async* {
     for (final plainWord in plainWords) {
       final response = await insertPlainWord(plainWord);
-      responses.add(response);
+      yield response;
     }
-    return responses;
   }
 
   Future<void> deleteWord(String id) => _wordsService.deleteWord(id);

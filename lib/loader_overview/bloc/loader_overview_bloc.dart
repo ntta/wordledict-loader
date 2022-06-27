@@ -1,9 +1,12 @@
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
+import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:wordledict_loader/core/domain/word.dart';
+import 'package:wordledict_loader/core/infrastructure/network/dictionary_failure.dart';
+import 'package:wordledict_loader/core/infrastructure/words/word_response.dart';
 import 'package:wordledict_loader/core/infrastructure/words/words_repository.dart';
 
 part 'loader_overview_event.dart';
@@ -52,7 +55,6 @@ class LoaderOverviewBloc
     LoaderOverviewWordSubmitted event,
     Emitter<LoaderOverviewState> emit,
   ) async {
-    // emit(state.copyWith(status: () => LoaderOverviewStatus.loading));
     final response = await _wordsRepository.insertPlainWord(event.plainWord);
     if (response.isLeft()) {
       response.leftMap((l) {
@@ -199,27 +201,39 @@ class LoaderOverviewBloc
       state.copyWith(
         processingFile: () => event.file,
         fileProcessingMessages: () => [],
+        fileProcessingStatus: () =>
+            LoaderOverviewFileProcessingStatus.processing,
       ),
     );
     final plainWords = event.file
         .readAsLinesSync()
         .where((line) => line.trim() != '')
         .toList();
-    final wordResponses = await _wordsRepository.insertPlainWords(plainWords);
-    final List<String> messages = [];
-    for (var wordResponse in wordResponses) {
-      wordResponse.fold(
-        (l) => messages.add(l.map(api: (_) => 'Error code ${_.errorCode}')),
-        (r) {
-          r.when(
-            noMeaning: (plainWord) =>
-                messages.add("'$plainWord' has no meaning"),
-            withMeaning: (word) => messages.add("'${word.id}' has been added"),
-            duplicate: (word) => messages.add("'${word.id}' already exists"),
-          );
-        },
-      );
-    }
+
+    await emit.forEach<Either<DictionaryFailure, WordResponse<Word>>>(
+      _wordsRepository.insertPlainWords(plainWords),
+      onData: (wordResponse) {
+        final message = wordResponse.fold(
+          (l) => l.map(api: (_) => 'Error code ${_.errorCode}'),
+          (r) => r.when(
+            noMeaning: (plainWord) {
+              return "'$plainWord' has no meaning";
+            },
+            withMeaning: (word) {
+              return "'${word.id}' has been added";
+            },
+            duplicate: (word) {
+              return "'${word.id}' already exists";
+            },
+          ),
+        );
+        return state.copyWith(
+          fileProcessingMessages: () =>
+              [message, ...state.fileProcessingMessages],
+        );
+      },
+    );
+
     final allWords = await _wordsRepository.getWords();
     state.wordsTableKey?.currentState?.pageTo(0);
     state.searchTermController?.clear();
@@ -228,6 +242,8 @@ class LoaderOverviewBloc
         allWords: () => allWords,
         words: () => allWords,
         selectedWord: () => null,
+        fileProcessingStatus: () =>
+            LoaderOverviewFileProcessingStatus.processed,
       ),
     );
   }
@@ -240,6 +256,7 @@ class LoaderOverviewBloc
       state.copyWith(
         fileProcessingMessages: () => [],
         processingFile: () => null,
+        fileProcessingStatus: () => LoaderOverviewFileProcessingStatus.initial,
       ),
     );
   }

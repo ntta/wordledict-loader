@@ -73,19 +73,26 @@ class WordsService {
           break;
         }
         final originAndIndex = (element['meta']['id'] as String).split(':');
-        if (origin == null) {
-          if (originAndIndex[0].contains(' ')) {
-            continue;
-          }
-          origin = originAndIndex[0];
+        final stems =
+            (element['meta']['stems'] as List<dynamic>).cast<String>();
+
+        if (stems.contains(plainWord)) {
+          origin ??= originAndIndex[0];
         } else {
-          if (originAndIndex[0] != origin) {
-            continue;
-          }
+          continue;
         }
 
-        final key = element['meta']['app-shortdef']['fl']; // noun, verb, etc.
-        final value = element['meta']['app-shortdef']['def'] as List<dynamic>;
+        final appShortDef = element['meta']['app-shortdef'];
+
+        if (appShortDef == null ||
+            appShortDef is List ||
+            appShortDef['fl'] == null ||
+            appShortDef['def'] == null) {
+          continue;
+        }
+
+        final key = appShortDef['fl']; // noun, verb, etc.
+        final value = appShortDef['def'] as List<dynamic>;
         meanings[key] = value.cast<String>();
       }
 
@@ -105,11 +112,11 @@ class WordsService {
         throw RestApiException(e.response?.statusCode);
       } else {
         // TODO: proper error catching
-        print(e.toString());
+        print('$plainWord ${e.toString()}');
         throw RestApiException(500);
       }
     } catch (e) {
-      print(e.toString());
+      print('$plainWord ${e.toString()}');
       throw RestApiException(500);
     }
   }
